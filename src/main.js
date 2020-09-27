@@ -2,9 +2,16 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import './styles/index.less'
+
+// 加载 vant组件库
 import Vant from 'vant'
+// 加载 vant组件库样式
 import 'vant/lib/index.css'
+
+// 加载全局样式 更改css加载顺序，方便覆盖第三方样式
+import './styles/index.less'
+
+// 自动设置 rem 基准值(html 标签字体大小)
 import 'amfe-flexible'
 
 Vue.config.productionTip = false
