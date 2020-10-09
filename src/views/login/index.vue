@@ -40,6 +40,7 @@
             @finish="isCountDownShow = false"
           />
           <van-button
+            v-else
             class="send-btn"
             size="mini"
             round
@@ -81,6 +82,7 @@ export default {
         ]
       },
       isSendSmsLoading: false,
+      // 控制倒计时及发送按钮
       isCountDownShow: false
     }
   },
@@ -126,6 +128,8 @@ export default {
 
         // 短信发出去了,显示倒计时，关闭发送按钮
         this.isCountDownShow = true
+
+        // 倒计时结束 -> 隐藏倒计时，显示发送按钮（监视倒计时的 finish 事件处理）
       } catch (err) {
         // try 里面任何代码的错误都会进入 catch
         // 不同的错误需要有不同的提示，那就需要判断了
