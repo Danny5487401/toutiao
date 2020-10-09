@@ -81,6 +81,7 @@ export default {
           { pattern: /\d{6}$/, message: '验证码格式错误' }
         ]
       },
+      // 发送状态显示
       isSendSmsLoading: false,
       // 控制倒计时及发送按钮
       isCountDownShow: false
@@ -133,6 +134,8 @@ export default {
       } catch (err) {
         // try 里面任何代码的错误都会进入 catch
         // 不同的错误需要有不同的提示，那就需要判断了
+        // 发送失败，显示发送按钮，关闭倒计时
+        this.isCountDownShow = false
         let message = ''
         if (err && err.response && err.response.status === 429) {
           // 发送短信失败的错误提示
@@ -151,6 +154,8 @@ export default {
           position: 'top'
         })
       }
+      // 无论发送验证码成功还是失败，最后都要关闭发送按钮的 loading 状态
+      this.isSendSmsLoading = false
     }
   }
 }
