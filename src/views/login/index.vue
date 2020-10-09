@@ -10,13 +10,16 @@
     <!-- /导航栏 -->
     <!-- 使用vant组件验证 -->
     <!-- 登录表单 -->
-    <van-form @submit="onLogin">
+    <van-form @submit="onLogin"
+      ref="login-form"
+      @failed="onFailed">
       <van-field
         v-model="user.mobile"
         icon-prefix="toutiao"
         label="手机号"
         left-icon="shouji"
         placeholder="请输入手机号"
+        name="mobile"
         :rules="formRules.mobile"
       />
       <van-field
@@ -26,18 +29,27 @@
         left-icon="yanzhengma"
         label="验证码"
         placeholder="请输入验证码"
+        name="code"
         :rules="formRules.code"
       >
         <template #button>
+          <van-count-down
+            v-if="isCountDownShow"
+            :time="1000 * 60"
+            format="ss s"
+            @finish="isCountDownShow = false"
+          />
           <van-button
             class="send-btn"
             size="mini"
             round
+            @click.prevent="onSendSms"
+            :loading="isSendSmsLoading"
           >发送验证码</van-button>
         </template>
       </van-field>
     <div class="login-btn-wrap" >
-      <van-button class="login-btn" type="info" block >登录</van-button>
+      <van-button class="login-btn" type="info" block @click="onLogin">登录</van-button>
     </div>
     <!-- /登录表单 -->
     </van-form>
@@ -45,7 +57,7 @@
 </template>
 
 <script>
-import { login } from '@/api/user'
+import { login, sendSms } from '@/api/user'
 // import { Toast } from 'vant'
 
 export default {
@@ -67,7 +79,9 @@ export default {
           { required: true, message: '请填写验证码' },
           { pattern: /\d{6}$/, message: '验证码格式错误' }
         ]
-      }
+      },
+      isSendSmsLoading: false,
+      isCountDownShow: false
     }
   },
   computed: {},
@@ -92,6 +106,46 @@ export default {
           console.log('登录失败', err)
           this.$toast.fail('登入失败，手机号或者验证码错误')
         }
+      }
+    },
+    onFailed (error) {
+      if (error.errors[0]) {
+        this.$toast({
+          message: error.errors[0].message, // 提示消息
+          position: 'top' // 防止手机键盘太高看不见提示消息
+        })
+      }
+    },
+    async onSendSms () {
+      try {
+        // 校验手机号码
+        await this.$refs['login-form'].validate('mobile')
+        // 验证通过，请求发送验证码
+        this.isSendSmsLoading = true // 展示按钮的 loading 状态，防止网络慢用户多次点击触发发送行为
+        await sendSms(this.user.mobile)
+
+        // 短信发出去了,显示倒计时，关闭发送按钮
+        this.isCountDownShow = true
+      } catch (err) {
+        // try 里面任何代码的错误都会进入 catch
+        // 不同的错误需要有不同的提示，那就需要判断了
+        let message = ''
+        if (err && err.response && err.response.status === 429) {
+          // 发送短信失败的错误提示
+          message = '发送太频繁了，请稍后重试'
+        } else if (err.name === 'mobile') {
+          // 表单验证失败的错误提示
+          message = err.message
+        } else {
+          // 未知错误
+          message = '发送失败，请稍后重试'
+        }
+
+        // 提示用户
+        this.$toast({
+          message,
+          position: 'top'
+        })
       }
     }
   }
