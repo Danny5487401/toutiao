@@ -50,7 +50,7 @@
         </template>
       </van-field>
     <div class="login-btn-wrap" >
-      <van-button class="login-btn" type="info" block @click="onLogin">登录</van-button>
+      <van-button class="login-btn" type="info" block >登录</van-button>
     </div>
     <!-- /登录表单 -->
     </van-form>
