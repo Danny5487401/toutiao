@@ -106,6 +106,8 @@ export default {
         this.$toast.success('登入成功')
         // 将后端返回的用户登录状态（token等数据）放到 Vuex 容器中
         this.$store.commit('setUser', data.data)
+        // 跳转到首页
+        this.$router.push('/my')
       } catch (err) {
         if (err.response.status === 400) {
           console.log('登录失败', err)
