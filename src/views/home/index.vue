@@ -14,32 +14,47 @@
     <!-- /导航栏 -->
 
     <!-- 文章频道列表 -->
+    <!-- 标签页组件有一个功能,只有你第一次查看标签页的时候才渲染里面的内容 -->
     <van-tabs v-model="active">
-      <van-tab title="标签 1">内容 1</van-tab>
-      <van-tab title="标签 2">内容 2</van-tab>
-      <van-tab title="标签 3">内容 3</van-tab>
-      <van-tab title="标签 4">内容 4</van-tab>
-      <van-tab title="标签 5">内容 5</van-tab>
+      <van-tab :title="channel.name" v-for= "channel in channels" :key = 'channel.id' >
+        <!-- 文档列表 -->
+        <article-list :chanel = 'channel'></article-list>
+        <!-- 文章列表 -->
+      </van-tab>
+
     </van-tabs>
     <!-- /文章频道列表 -->
   </div>
 </template>
 
 <script>
+import { getUserChannels } from '@/api/user'
+import ArticleList from './components/article-list'
+
 export default {
   name: 'LoginIndex',
-  components: {},
+  components: {
+    ArticleList
+  },
   props: {},
   data () {
     return {
-      active: 0 // 控制被激活的标签
+      active: 0, // 控制被激活的标签
+      channels: []
     }
   },
   computed: {},
   watch: {},
-  created () {},
+  created () {
+    this.loadChannels()
+  },
   mounted () {},
-  methods: {}
+  methods: {
+    async loadChannels () {
+      const { data } = await getUserChannels()
+      this.channels = data.data.channels
+    }
+  }
 }
 </script>
 
