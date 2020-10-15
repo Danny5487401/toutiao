@@ -18,7 +18,7 @@
     <van-tabs v-model="active">
       <van-tab :title="channel.name" v-for= "channel in channels" :key = 'channel.id' >
         <!-- 文档列表 -->
-        <article-list :chanel = 'channel'></article-list>
+        <article-list :channel = 'channel'></article-list>
         <!-- 文章列表 -->
       </van-tab>
 
