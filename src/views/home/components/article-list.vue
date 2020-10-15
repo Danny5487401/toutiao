@@ -6,20 +6,29 @@
       finished-text="没有更多了"
       @load="onLoad"
   >
-      <van-cell
-        v-for="(article, index) in articles"
-        :key="index"
-        :title="article.title"
-      />
+    <!-- <van-cell
+      v-for="(article, index) in articles"
+      :key="index"
+      :title="article.title"
+    /> -->
+    <article-item
+      v-for="(article, index) in articles"
+      :key="index"
+      :article = "article">
+    </article-item>
   </van-list>
   </div>
 </template>
 
 <script>
 import { getArticles } from '@/api/article'
+import ArticleItem from '@/components/article-item'
+
 export default {
   name: 'ArticleList',
-  components: {},
+  components: {
+    ArticleItem
+  },
   props: {
     channel: {
       type: Object,
