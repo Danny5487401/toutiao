@@ -21,6 +21,9 @@
         <article-list :channel = 'channel'></article-list>
         <!-- 文章列表 -->
       </van-tab>
+      <!-- 它默认会把你写的其它内容渲染到内容的底部 -->
+      <div slot="nav-right" class="van-tab" style="flex: 0 0 8%;"></div>
+      <van-icon slot="nav-right" class="wap-nav" name="wap-nav" @click="isChannelEditShow = true" />
     </van-tabs>
     <!-- /文章频道列表 -->
     <!--频道编辑弹窗 -->
@@ -115,5 +118,13 @@ export default {
   .channel-edit-popup {
     border-radius: 10px 10px 0 0;
   }
+  .wap-nav {
+  position: fixed;
+  right: 0;
+  background-color: #fff;
+  opacity: .8;
+  font-size: 26px;
+  line-height: 43px;
+}
 }
 </style>
