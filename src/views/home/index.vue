@@ -21,26 +21,52 @@
         <article-list :channel = 'channel'></article-list>
         <!-- 文章列表 -->
       </van-tab>
-
     </van-tabs>
     <!-- /文章频道列表 -->
+    <!--频道编辑弹窗 -->
+    <van-popup
+      v-model="isChannelEditShow"
+      position="bottom"
+      :style="{ height: '100%' }"
+      round
+      :overlay="false"
+      class="channel-edit-popup"
+    >
+      <van-nav-bar title="编辑频道">
+        <van-icon
+          name="cross"
+          slot="left"
+          size="20"
+          @click="isChannelEditShow = false"
+        />
+      </van-nav-bar>
+      <channel-edit
+        :user-channels="channels"
+        v-model="active"
+        @close="isChannelEditShow = false"
+      />
+    </van-popup>
+    <!-- /频道编辑弹窗 -->
   </div>
 </template>
 
 <script>
 import { getUserChannels } from '@/api/user'
 import ArticleList from './components/article-list'
+import ChannelEdit from './components/channel-edit'
 
 export default {
   name: 'LoginIndex',
   components: {
-    ArticleList
+    ArticleList,
+    ChannelEdit
   },
   props: {},
   data () {
     return {
       active: 0, // 控制被激活的标签
-      channels: []
+      channels: [],
+      isChannelEditShow: false
     }
   },
   computed: {},
@@ -74,6 +100,20 @@ export default {
     // .van-button__text {
     //   font-size: 14px;
     // }
+  }
+  /deep/ .van-tabs {
+  .van-tab {
+    border-right: 1px solid #edeff3;
+    border-bottom: 1px solid #edeff3;
+  }
+  .van-tabs__line {
+    width: 15px !important;
+    background-color: #3296fa;
+    bottom: 20px;
+  }
+}
+  .channel-edit-popup {
+    border-radius: 10px 10px 0 0;
   }
 }
 </style>

@@ -14,6 +14,8 @@ import './styles/index.less'
 // 自动设置 rem 基准值(html 标签字体大小)
 import 'amfe-flexible'
 
+import './utils/dayjs'
+
 Vue.config.productionTip = false
 
 new Vue({
