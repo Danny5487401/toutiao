@@ -12,3 +12,20 @@ export function getAllChannels () {
     url: '/v1_0/channels'
   })
 }
+
+export const addChannel = channel => {
+  return request({
+    method: 'PATCH',
+    url: '/v1_0/user/channels',
+    data: {
+      channels: [channel]
+    }
+  })
+}
+
+export const deleteChannel = channelId => {
+  return request({
+    method: 'DELETE',
+    url: `/v1_0/user/channels/${channelId}`
+  })
+}

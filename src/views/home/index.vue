@@ -57,6 +57,8 @@
 import { getUserChannels } from '@/api/user'
 import ArticleList from './components/article-list'
 import ChannelEdit from './components/channel-edit'
+import { mapState } from 'vuex'
+import { getItem } from '@/utils/storage'
 
 export default {
   name: 'LoginIndex',
@@ -72,16 +74,34 @@ export default {
       isChannelEditShow: false
     }
   },
-  computed: {},
+  computed: {
+    ...mapState(['user'])
+  },
   watch: {},
   created () {
-    this.loadChannels()
+    this.loadUserChannels()
   },
   mounted () {},
   methods: {
-    async loadChannels () {
-      const { data } = await getUserChannels()
-      this.channels = data.data.channels
+    async loadUserChannels () {
+      let channels = []
+      if (this.user) {
+        // 已登录，请求获取用户频道列表
+        const { data } = await getUserChannels()
+        channels = data.data.channels
+      } else {
+        // 未登录
+        const localChannels = getItem('channels')
+        if (localChannels) {
+          // 使用本地存储的频道列表
+          channels = localChannels
+        } else {
+          // 没有就使用默认推荐的频道列表
+          const { data } = await getUserChannels()
+          channels = data.data.channels
+        }
+      }
+      this.channels = channels
     }
   }
 }
