@@ -1,26 +1,56 @@
 <template>
   <div class="search-suggestion">
-    <van-cell title="黑马程序员..." icon="search"></van-cell>
-    <van-cell title="黑马程序员..." icon="search"></van-cell>
-    <van-cell title="黑马程序员..." icon="search"></van-cell>
-    <van-cell title="黑马程序员..." icon="search"></van-cell>
-    <van-cell title="黑马程序员..." icon="search"></van-cell>
+    <van-cell
+      icon="search"
+      :key="index"
+      v-for="(item, index) in suggestions"
+    >
+      <div slot="title" v-html="highlight(item)"></div>
+    </van-cell>
   </div>
 </template>
 
 <script>
+import { debounce } from 'lodash'
+import { getSuggestions } from '@/api/search'
 export default {
   name: 'SearchSuggestion',
   components: {},
-  props: {},
+  props: {
+    q: {
+      type: String,
+      required: true
+    }
+  },
   data () {
-    return {}
+    return {
+      suggestions: []
+    }
   },
   computed: {},
-  watch: {},
+  watch: {
+    q: {
+      handler: debounce(async function () {
+        const q = this.q
+        if (!q) {
+          return
+        }
+        const { data } = await getSuggestions(q)
+        this.suggestions = data.data.options
+      }, 200),
+      immediate: true
+    }
+  },
   created () {},
   mounted () {},
-  methods: {}
+  methods: {
+    highlight (str) {
+      return str.toLowerCase().replace(
+        this.q.toLowerCase(),
+        `<span style="color: red;">${this.q}</span>`
+      )
+    }
+  }
 }
 </script>
 

@@ -12,16 +12,17 @@
         background="#3296fa"
         @search="onSearch"
         @cancel="onCancel"
+        @focus="isResultShow = false"
       />
     </form>
     <!-- /搜索栏 -->
 
     <!-- 搜索结果 -->
-    <search-result v-if="isResultShow" />
+    <search-result v-if="isResultShow"  :q = "searchText" />
     <!-- /搜索结果 -->
 
     <!-- 联想建议 -->
-    <search-suggestion v-else-if="searchText" />
+    <search-suggestion v-else-if="searchText" :q = "searchText" />
     <!-- /联想建议 -->
 
     <!-- 搜索历史记录 -->
@@ -46,16 +47,22 @@ export default {
   data () {
     return {
       searchText: '',
-      isResultShow: false
+      isResultShow: false,
+      suggestions: []
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+  },
   created () {},
   mounted () {},
   methods: {
-    onSearch (val) {
-      console.log(val)
+    onSearch (q) {
+      // q: 文本框数据本身、联想建议文本、历史记录文本
+      // 1. 修改搜索框的文本内容
+      this.searchText = q
+      // 3. 展示搜索结果
+      this.isResultShow = true
     },
     onCancel () {
       this.$router.back()
