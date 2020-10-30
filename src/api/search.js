@@ -26,3 +26,13 @@ export function getSuggestions (q) {
     }
   })
 }
+
+/**
+ * 获取推荐结果
+ */
+export function getUserSerchHistory () {
+  return request({
+    method: 'GET',
+    url: '/v1_0/search/histories'
+  })
+}
