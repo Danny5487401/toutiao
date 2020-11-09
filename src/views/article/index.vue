@@ -28,10 +28,19 @@
       >
        关注</van-button>
     </van-cell>
+    <div class="markdown-body">
+      <p>hdsadadsdas</p>
+      <p>dsadsadasd132132</p>
+      <ul>
+        <li>d121654</li>
+        <li>d121654</li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
+import './github-markdown.css'
 // 在组件中获取动态路由参数：
 //    方式一：this.$route.params.articleId
 //    方式二：props 传参，推荐
@@ -85,5 +94,12 @@ export default {
     width: 85px;
     height: 29px;
   }
+}
+.markdown-body {
+  padding: 14px;
+  background-color: #fff;
+}
+ul {
+  list-style: unset;
 }
 </style>
