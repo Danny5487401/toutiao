@@ -40,6 +40,9 @@
 </template>
 
 <script>
+import {
+  getArticleById
+} from '@/api/article'
 import './github-markdown.css'
 // 在组件中获取动态路由参数：
 //    方式一：this.$route.params.articleId
@@ -61,9 +64,15 @@ export default {
   },
   computed: {},
   watch: {},
-  created () {},
+  created () {
+    this.loadArtcitle()
+  },
   mounted () {},
   methods: {
+    async loadArtcitle () {
+      const { data } = await getArticleById(this.articleId)
+      console.log(data)
+    }
   }
 }
 </script>
