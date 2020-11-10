@@ -8,33 +8,27 @@
       @click-left="$router.back()"
     />
     <!-- /导航栏 -->
-    <h1  class="title">文章你好发家史法拉激烈对抗撒娇的撒大了刷卡记录</h1>
+    <h1  class="title">{{article.title}}</h1>
     <van-cell center class="user-info">
       <van-image
       slot="icon"
       round
       fit="cover"
-      src="https://img.yzcdn.cn/vant/cat.jpeg"
+      :src="article.aut_photo"
       class="avator"
       />
-      <div slot="title" class="name"> 天涯西欧i啊大神</div>
-      <div slot="label" class="pubdate"> 14小时前</div>
+      <div slot="title" class="name">{{article.aut_name}}</div>
+      <div slot="label" class="pubdate"> {{article.pubdate | relativeTime}}</div>
       <van-button
-      type="info"
+      :type="article.is_followed ? 'default' :'info' "
       round
       size="small"
       class="follow-btn"
-      icon="plus"
+      :icon="article.is_followed ? '' :'plus'"
       >
-       关注</van-button>
+       {{article.is_followed ? '已关注' : '关注'}}</van-button>
     </van-cell>
-    <div class="markdown-body">
-      <p>hdsadadsdas</p>
-      <p>dsadsadasd132132</p>
-      <ul>
-        <li>d121654</li>
-        <li>d121654</li>
-      </ul>
+    <div class="markdown-body" v-html="article.content">
     </div>
   </div>
 </template>
@@ -54,12 +48,13 @@ export default {
   components: {},
   props: {
     articleId: {
-      type: String,
+      type: [String, Number, Object],
       required: true
     }
   },
   data () {
     return {
+      article: {}
     }
   },
   computed: {},
@@ -71,7 +66,7 @@ export default {
   methods: {
     async loadArtcitle () {
       const { data } = await getArticleById(this.articleId)
-      console.log(data)
+      this.article = data.data
     }
   }
 }
