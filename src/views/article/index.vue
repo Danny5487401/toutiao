@@ -49,8 +49,9 @@
         color="#777"
       />
       <van-icon
-        color="#777"
-        name="star-o"
+        :color="article.is_collected ? 'orange' : '#777'"
+        :name="article.is_collected ? 'star' : 'star-o'"
+        @click="onCollect"
       />
       <van-icon
         color="#777"
@@ -66,7 +67,9 @@
 import { ImagePreview } from 'vant'
 import { addFollow, deleteFollow } from '@/api/user'
 import {
-  getArticleById
+  getArticleById,
+  addCollect,
+  deleteCollect
 } from '@/api/article'
 import './github-markdown.css'
 // 在组件中获取动态路由参数：
@@ -143,6 +146,21 @@ export default {
       // 更新关注状态
       this.article.is_followed = !this.article.is_followed
       this.isFollowLoading = false
+    },
+    async onCollect () {
+      this.$toast.loading({
+        message: '操作中...',
+        forbidClick: true // 禁止背景点击
+      })
+      if (this.article.is_collected) {
+        // 已收藏，取消收藏
+        await deleteCollect(this.articleId)
+      } else {
+        // 没有收藏，添加收藏
+        await addCollect(this.articleId)
+      }
+      this.article.is_collected = !this.article.is_collected
+      this.$toast.success(`${this.article.is_collected ? '' : '取消'}收藏成功`)
     }
   }
 }
