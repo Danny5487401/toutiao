@@ -8,32 +8,39 @@
       @click-left="$router.back()"
     />
     <!-- /导航栏 -->
-    <h1  class="title">{{article.title}}</h1>
-    <van-cell center class="user-info">
-      <van-image
-      slot="icon"
-      round
-      fit="cover"
-      :src="article.aut_photo"
-      class="avator"
-      />
-      <div slot="title" class="name">{{article.aut_name}}</div>
-      <div slot="label" class="pubdate"> {{article.pubdate | relativeTime}}</div>
-      <van-button
-      :type="article.is_followed ? 'default' :'info' "
-      round
-      size="small"
-      class="follow-btn"
-      :icon="article.is_followed ? '' :'plus'"
-      @click="onFollow"
-      :loading="isFollowLoading"
+    <div class="article-wrap">
+      <h1  class="title">{{article.title}}</h1>
+      <van-cell center class="user-info">
+        <van-image
+        slot="icon"
+        round
+        fit="cover"
+        :src="article.aut_photo"
+        class="avator"
+        />
+        <div slot="title" class="name">{{article.aut_name}}</div>
+        <div slot="label" class="pubdate"> {{article.pubdate | relativeTime}}</div>
+        <van-button
+        :type="article.is_followed ? 'default' :'info' "
+        round
+        size="small"
+        class="follow-btn"
+        :icon="article.is_followed ? '' :'plus'"
+        @click="onFollow"
+        :loading="isFollowLoading"
+        >
+        {{article.is_followed ? '已关注' : '关注'}}</van-button>
+      </van-cell>
+      <div class="markdown-body"
+      v-html="article.content"
+      ref="article-content"
       >
-       {{article.is_followed ? '已关注' : '关注'}}</van-button>
-    </van-cell>
-    <div class="markdown-body"
-    v-html="article.content"
-    ref="article-content"
-    >
+      </div>
+
+      <!-- 文章评论列表 -->
+      <comment-list
+      />
+      <!-- /文章评论列表 -->
     </div>
 
     <!-- 底部区域 -->
@@ -66,6 +73,7 @@
 <script>
 import { ImagePreview } from 'vant'
 import { addFollow, deleteFollow } from '@/api/user'
+import CommentList from './components/comment-list'
 import {
   getArticleById,
   addCollect,
@@ -79,7 +87,7 @@ import './github-markdown.css'
 
 export default {
   name: 'ArticleIndex',
-  components: {},
+  components: { CommentList },
   props: {
     articleId: {
       type: [String, Number, Object],
@@ -167,6 +175,14 @@ export default {
 </script>
 
 <style scoped lang="less">
+.article-wrap {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 46px;
+  bottom: 44px;
+  overflow-y: auto;
+}
 .title{
   font-size: 20px;
   color: #3a3a3a;
